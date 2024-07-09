@@ -1,0 +1,13 @@
+
+    .swal-black-icon {
+      --swal-icon-color: theme('colors.black') !important;
+    }
+  
+    .swal-button-black {
+      @apply bg-black text-white !important;
+    }
+  
+    .swal-button-black:hover {
+      @apply bg-gray-800 !important;
+    }
+  
