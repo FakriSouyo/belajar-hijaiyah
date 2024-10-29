@@ -18,10 +18,9 @@ const About = () => {
         
         <div className="grid gap-4">
           {[
-            { name: 'Febri Kurnia Sandi', role: 'Team pengembang' },
+            { name: 'Fakhri Abdillah', role: 'Team pengembang' },
             { name: 'Cahya Damarjati, S.T. M. Eng., Ph.D.', role: 'Dosen pembimbing 1' },
             { name: 'Asroni', role: 'Dosen pembimbing 2' },
-            { name: 'Fakhri Abdillah', role: 'Team pengembang' },
           ].map((member, index) => (
             <div key={index} className="bg-gray-100 p-4 rounded-lg flex items-center">
               <div className="w-16 h-16 bg-gray-300 rounded-full mr-4"></div>

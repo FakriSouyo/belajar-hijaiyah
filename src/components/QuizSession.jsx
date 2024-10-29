@@ -102,7 +102,12 @@ const QuizSession = () => {
               localStorage.setItem('completedQuizzes', JSON.stringify(completedQuizzes));
           }
 
-          navigate(`/quiz/${quizId}/result`, { state: { answers: [...answers, { letter: quizData[quizId][currentQuestion].letter, score: score }] } });
+          navigate(`/quiz/${quizId}/result`, { 
+              state: { 
+                  answers: [...answers, { letter: quizData[quizId][currentQuestion].letter, score: score }],
+                  quizId: quizId 
+              } 
+          });
       }
   };
 
@@ -125,24 +130,108 @@ const QuizSession = () => {
     };
 
     if (isLoading) {
-        return <div className="text-center mt-8">Loading model...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                    <p className="text-xl font-semibold">Loading model...</p>
+                </div>
+            </div>
+        );
     }
 
     if (!quizData[quizId] || !quizData[quizId][currentQuestion]) {
-        return <div className="text-center mt-8">Quiz tidak ditemukan</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-xl font-semibold text-red-600">Quiz tidak ditemukan</p>
+                    <button 
+                        onClick={() => navigate('/quiz')}
+                        className="mt-4 bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    >
+                        Kembali ke Daftar Quiz
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-4">Quiz {quizId}: Pertanyaan {currentQuestion + 1}</h1>
-            <p className="mb-4">{quizData[quizId][currentQuestion].prompt}</p>
-            <SimpleCanvas ref={canvasRef} width={280} height={280} lineColor="white" backgroundColor="black" />
-            <div className="mt-4">
-                <button onClick={clearCanvas} className="bg-gray-300 text-black px-4 py-2 rounded mr-2">Clear</button>
-                <button onClick={handleSubmit} className="bg-gray-800 text-white px-4 py-2 rounded">Submit</button>
-            </div>
-            <div className="mt-4">
-                <p>Progress: {currentQuestion + 1} / {quizData[quizId].length}</p>
+        <div className="min-h-screen bg-gray-50 py-12">
+            <div className="max-w-4xl mx-auto px-4">
+                {/* Header Section */}
+                <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h1 className="text-3xl font-bold text-gray-800">Quiz {quizId}</h1>
+                    <div className="mt-4">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div 
+                                className="bg-gray-800 h-2.5 rounded-full transition-all duration-300" 
+                                style={{ width: `${(currentQuestion + 1) / quizData[quizId].length * 100}%` }}
+                            ></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">
+                            Pertanyaan {currentQuestion + 1} dari {quizData[quizId].length}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="bg-white rounded-lg shadow-md p-6">
+                    {/* Question */}
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                            {quizData[quizId][currentQuestion].prompt}
+                        </h2>
+                        <p className="text-gray-600">
+                            Gambar huruf menggunakan mouse atau touch screen
+                        </p>
+                    </div>
+
+                    {/* Canvas Section */}
+                    <div className="flex flex-col items-center">
+                        <div className="border-4 border-gray-200 rounded-lg p-2 mb-4">
+                            <SimpleCanvas 
+                                ref={canvasRef} 
+                                width={280} 
+                                height={280} 
+                                lineColor="white" 
+                                backgroundColor="black" 
+                            />
+                        </div>
+
+                        {/* Controls */}
+                        <div className="flex gap-4 mb-6">
+                            <button 
+                                onClick={clearCanvas}
+                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors flex items-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                                Hapus
+                            </button>
+                            <button 
+                                onClick={handleSubmit}
+                                className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Tips */}
+                    <div className="mt-6 bg-gray-50 rounded-lg p-4">
+                        <h3 className="text-sm font-semibold text-gray-700 mb-2">Tips:</h3>
+                        <ul className="text-sm text-gray-600 list-disc list-inside">
+                            <li>Gambar huruf dengan jelas dan lengkap</li>
+                            <li>Gunakan seluruh area kanvas yang tersedia</li>
+                            <li>Jika melakukan kesalahan, gunakan tombol Hapus</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     );

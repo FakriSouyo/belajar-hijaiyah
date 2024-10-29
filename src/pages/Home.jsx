@@ -1,17 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const { user } = useUser();
   const navigate = useNavigate();
 
   const handleBelajarClick = () => {
-    if (user) {
-      navigate('/belajar');
-    } else {
-      navigate('/login');
-    }
+    navigate('/belajar');
   };
 
   return (
@@ -35,8 +29,6 @@ const Home = () => {
           Belajar
         </button>
       </div>
-
-      {/* Footer code remains the same */}
     </div>
   );
 };
